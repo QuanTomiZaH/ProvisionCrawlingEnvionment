@@ -6,7 +6,7 @@
 
 #Disclaimer. This only works on a system close to fabrication settings regarding installs etc. Developed for ubuntu 16.04
 #When ssh'd to your system. Use the below command:
-#wget -O - https://raw.githubusercontent.com/QuanTomiZaH/ProvisionCrawlingEnvionment/master/Provisionscript | bash
+#wget -O - https://raw.githubusercontent.com/QuanTomiZaH/ProvisionCrawlingEnvionment/master/Secondtry | bash
 
 sudo apt-get update
 sudo apt-get intall python3
@@ -19,3 +19,4 @@ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 sudo apt-get install chromium-chromedriver
 
+sudo apt install requests
