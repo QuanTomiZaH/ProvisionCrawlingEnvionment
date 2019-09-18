@@ -6,6 +6,7 @@ sudo apt-get update
 sudo apt-get intall python3
 sudo apt install python-pip
 pip install selenium
+apt-get install python3-bs4
 pip install beautifulsoup
 pip install pandas
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
