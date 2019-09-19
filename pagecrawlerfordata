@@ -1,0 +1,24 @@
+from bs4 import BeautifulSoup
+import requests
+import re
+
+#create the soup
+page_url = "https://www.freelance.nl/opdracht/864724-wordpress-elementor-acf-specialist"
+page_html = requests.get(page_url)
+soup = BeautifulSoup(page_html.text, "html.parser")
+if soup is not "":
+    print("soup created!")
+
+#create lists for the data from the soups
+status_data = []
+title_data_in_soup = soup.find("div", attrs={"class": "head"}).text.strip()
+status_data_in_soup = soup.findAll(attrs={"class":"value"})
+status_data.append(str(title_data_in_soup))
+
+#fill the list with the values from the soup
+for span in status_data_in_soup:
+    data = span.text.strip()
+    status_data.append(str(data))
+
+#print(title_data_in_soup)
+print(status_data)
