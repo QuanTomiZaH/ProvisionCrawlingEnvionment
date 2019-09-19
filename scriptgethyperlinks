@@ -1,49 +1,55 @@
 #import all libraries
 from bs4 import BeautifulSoup
 import requests
-import os, os.path, csv
 import re
+import pandas as pd
+
+#A function to create a dynamic soup so it can be used in loops
+def create_soup(pageresponse_html):
+    soup = BeautifulSoup(pageresponse_html.text, "html.parser")
+    print("created a soup")
+    return soup
+
+#A function to create a list of hyperlinks for the while loop to function on.
+def list_url_from_page(addsoup):
+    return_url_list = []
+    find_url_list = re.findall('.*/opdracht/.*', str(addsoup))
+    for listed_url in find_url_list:
+        listed_url = "https://www.freelance.nl" + listed_url[9:-2]
+        return_url_list.append(listed_url)
+    print("created an url list")
+    return(return_url_list)
+
+#A function to create a soup and extract the required information
+def extract_nested_soup():
+    for url in url_list:
+        secondarysoup = create_soup(url)
+        #here we need to add the parser for the soup itself
+        #afterwards this should be appended to a list defined outside this function
+
+#create the nested soups(10) in a list so we can programatticaly search for data one by one
+def create_nested_soup():
+    count_url = len(url_list) - 1
+    nested_soup = []
+    while count_url > 0:
+        nested_soup.append(create_soup(requests.get(url_list[count_url])))
+        count_url -= 1
+    print("created a nested soup list")
+    return nested_soup
+
+#variable to loop through the pages, check later if this has to be a global variable
+countpages = 1
 
 #list the URl and create a count to go through all the pages
-countpages = 1
 pageurl = "https://www.freelance.nl/opdrachten?q=3g313i3k39313c1t1g3s393e3k353i3d353439313k351t1h3s3j3f3i3k1t34313k35&page=" + str(countpages)
 
 #create the primary soup, the secondary soup will be created in the while loop
 #first test if the primary soup works, do this by listing all the job names, location and URL
 page_html = requests.get(pageurl)
-#A function to create a dynamic soup so it can be used in loops
 
-def create_soup(pageresponse):
-    soup = BeautifulSoup(pageresponse.text, "html.parser")
-    return soup
+#here must be a loop in which all the urls are found, listed, counted and then call on the soup creating functions
+url_list = list_url_from_page(create_soup(page_html))
 
-#A function to create a list of hyperlinks for the while loop to function on.
-def list_url_from_page(AddSoup):
-    return_url_list = []
-    find_url_list = re.findall('.*/opdracht/.*', str(AddSoup))
-    for listed_url in find_url_list:
-        listed_url = "https://www.freelance.nl" + listed_url[9:-2]
-        return_url_list.append(listed_url)
-    return(return_url_list)
-
-
-url_print_list = list_url_from_page(create_soup(page_html))
-print(url_print_list)
-
-while countpages < 2:
-    #list_url = []
-    #for rows in primarysoup.findAll('a', href=re.compile('/opdracht/')):
-        #find_url = re.findall('.*/opdracht/.*', str(rows))
-        #list_url.append(find_url)
-        #print(find_url)
-        #print(str(countrows) + "  " + str(rows))
-        #countrows += 1
-
-
-
-    countpages += 1
-
-
-#print(primarysoup)
-#print(list_url)
+#testprints
+print(create_nested_soup())
 print("einde")
