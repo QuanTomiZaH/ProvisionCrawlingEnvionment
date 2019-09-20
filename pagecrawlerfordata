@@ -3,22 +3,26 @@ import requests
 import re
 
 #create the soup
+#this part must be dynamically taken from the main script
 page_url = "https://www.freelance.nl/opdracht/864724-wordpress-elementor-acf-specialist"
 page_html = requests.get(page_url)
-soup = BeautifulSoup(page_html.text, "html.parser")
-if soup is not "":
+soup1 = BeautifulSoup(page_html.text, "html.parser")
+if soup1 is not "":
     print("soup created!")
 
-#create lists for the data from the soups
-status_data = []
-title_data_in_soup = soup.find("div", attrs={"class": "head"}).text.strip()
-status_data_in_soup = soup.findAll(attrs={"class":"value"})
-status_data.append(str(title_data_in_soup))
+#the below function can be added to the script
+#function to create lists for the data from the soups
+def find_information(soup):
+    status_data = []
+    title_data_in_soup = soup.find("div", attrs={"class": "head"}).text.strip()
+    status_data_in_soup = soup.findAll(attrs={"class":"value"})
+    status_data.append(str(title_data_in_soup))
 
 #fill the list with the values from the soup
-for span in status_data_in_soup:
-    data = span.text.strip()
-    status_data.append(str(data))
+    for span in status_data_in_soup:
+        data = span.text.strip()
+        status_data.append(str(data))
+    return status_data
 
 #print(title_data_in_soup)
-print(status_data)
+print(find_information(soup1))
