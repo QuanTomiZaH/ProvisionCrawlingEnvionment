@@ -1,0 +1,48 @@
+from selenium import webdriver
+from BeautifulSoup import BeautifulSoup
+import pandas as pd
+
+driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
+
+hyperlinklist=[] #list to store the hyperlinks of the jobs
+jobnamelist=[] #List to store the name of the job
+locationlist=[] #List to store location of the job
+educationlist=[] #List to store education level of the job
+hoursperweeklist=[] #List to store hours per week of the job
+publicationdatelist=[] #List the publication date of the job
+driver.get("https://jobcatcher.nl/requests")
+
+content = driver.page_source
+print("Content found")
+soup = BeautifulSoup(content)
+
+def only_job_hyperlinks(href):
+    return href and re.compile("http://jobcatcher.nl/request-details").search(href)
+print(soup.findAll(hrprint(soup)ef=only_job_hyperlinks))
+
+integer = 1
+for a in soup.findAll('a',href=True):
+#for a in soup.findAll('a',href=True, attrs={'class':'text-center'}):
+	#print(str(integer) + "->" + str(a))
+	print(a.get('title='))
+	#hyperlinkname=a.get('href="http://jobcatcher.nl/request-details')
+	#hyperlinklist.append(hyperlinkname)
+	#integer = integer + 1
+#	jobname=find('div', attrs={'class':'ng-binding'})
+#	print("jobname found")
+#location
+#education
+#hoursperweek
+#publicationdate
+#	jobnamelist.append(jobname.text)
+
+print(jobnamelist)
+#print(hyperlinklist)
+#print(soup.prettify())
+
+#name=a.find('div', attrs={'class':'_3wU53n'})
+#price=a.find('div', attrs={'class':'_1vC4OE _2rQ-NK'})
+#rating=a.find('div', attrs={'class':'hGSR34 _2beYZw'})
+#products.append(name.text)
+#prices.append(price.text)
+#ratings.append(rating.text)
