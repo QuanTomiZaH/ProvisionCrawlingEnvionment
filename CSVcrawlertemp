@@ -20,14 +20,17 @@ totaldf = pd.DataFrame(columns={0: 'title',
                                 15: 'contract'})
 
 
+# the function to create the URL list from which information should be pulled
 def create_url_list():
-    input_vacancies_amount = 5
-    starting_page_number = 36032
-    while input_vacancies_amount > -1:
+    # For now the below variable has to be edited to add how many vacancies you want to check
+    input_vacancies_amount = 100
+    starting_page_number = 864283
+    while input_vacancies_amount > 0:
         total_url_list.append("https://www.freelance.nl/opdracht/" + str(starting_page_number))
         starting_page_number += 1
         input_vacancies_amount -= 1
     print(total_url_list)
+    print(len(total_url_list))
     return ()
 
 
@@ -64,7 +67,7 @@ def find_information():
         df = pd.DataFrame(status_data)
         df = pd.DataFrame.transpose(df)
         localdf = localdf.append(df, ignore_index=True)
-        print("Added a row to the dataframe")
+        print("Added a row to the dataframe " + str(count_while))
     return localdf
 
 
