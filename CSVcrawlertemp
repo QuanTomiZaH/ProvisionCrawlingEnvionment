@@ -24,13 +24,13 @@ totaldf = pd.DataFrame(columns={0: 'title',
 def create_url_list():
     # For now the below variable has to be edited to add how many vacancies you want to check
     input_vacancies_amount = 100
-    starting_page_number = 864283
+    starting_page_number = 864303
+
     while input_vacancies_amount > 0:
         total_url_list.append("https://www.freelance.nl/opdracht/" + str(starting_page_number))
         starting_page_number += 1
         input_vacancies_amount -= 1
     print(total_url_list)
-    print(len(total_url_list))
     return ()
 
 
@@ -45,30 +45,44 @@ def find_information():
     count_total_url = len(total_url_list)
     count_while = 0
     localdf = pd.DataFrame()
+
     while count_while < count_total_url:
         # create a list that will be filled and put into a function to enter a dataframe
         status_data = []
         nested_soup_string = create_soup(requests.get(total_url_list[count_while]))
 
         # append the data
-        title_data_in_soup = nested_soup_string.find("div", attrs={"class": "head"}).text.strip()
-        status_data_in_soup = nested_soup_string.findAll(attrs={"class": "value"})
-        status_data.append(str(title_data_in_soup))
-        status_data.append(str(total_url_list[count_while]))
+        try:
+            title_data_in_soup = nested_soup_string.find("div", attrs={"class": "head"}).text.strip()
+            status_data_in_soup = nested_soup_string.findAll(attrs={"class": "value"})
+            status_data.append(str(title_data_in_soup))
+            status_data.append(str(total_url_list[count_while]))
+
+            # Check all the different modules
+            for span in status_data_in_soup:
+                data = span.text.strip()
+                if data == "":
+                    data = "empty"
+                status_data.append(str(data))
+
+        except AttributeError:
+            print(total_url_list[count_while] + "; This page is not found")
 
         count_while += 1
-
-        # fill the list with the values from the soup
-        for span in status_data_in_soup:
-            data = span.text.strip()
-            status_data.append(str(data))
 
         # appending and transposing the dataframe
         df = pd.DataFrame(status_data)
         df = pd.DataFrame.transpose(df)
         localdf = localdf.append(df, ignore_index=True)
-        print("Added a row to the dataframe " + str(count_while))
+        print("Added a row to the dataframe " + str(count_while) + " for URL: " + total_url_list[count_while])
     return localdf
+
+
+# A function te define the amount of URLs the user wants to go through
+# # Check the availability inside the webpage
+# WIP
+def define_amount():
+    Placeholder = 0
 
 
 create_url_list()
