@@ -1,0 +1,77 @@
+# import all libraries
+from bs4 import BeautifulSoup
+import requests
+import pandas as pd
+
+total_url_list = []
+status_data = []
+totaldf = pd.DataFrame(columns={0: 'title',
+                                1: 'URL',
+                                2: 'datum',
+                                5: 'status',
+                                6: 'publicatiedatum',
+                                7: 'weergaven',
+                                8: 'reacties',
+                                10: 'op locatie',
+                                11: 'startdatum',
+                                12: 'looptijd',
+                                13: 'FTE in %',
+                                14: 'tarief',
+                                15: 'contract'})
+
+
+def create_url_list():
+    input_vacancies_amount = 5
+    starting_page_number = 36032
+    while input_vacancies_amount > -1:
+        total_url_list.append("https://www.freelance.nl/opdracht/" + str(starting_page_number))
+        starting_page_number += 1
+        input_vacancies_amount -= 1
+    print(total_url_list)
+    return ()
+
+
+# A function to create a dynamic soup so it can be used in loops
+def create_soup(pageresponse_html):
+    soup = BeautifulSoup(pageresponse_html.text, "html.parser")
+    return soup
+
+
+def find_information():
+    # create the nested soups(10) in a list so we can programatticaly search for data one by one
+    count_total_url = len(total_url_list)
+    count_while = 0
+    localdf = pd.DataFrame()
+    while count_while < count_total_url:
+        # create a list that will be filled and put into a function to enter a dataframe
+        status_data = []
+        nested_soup_string = create_soup(requests.get(total_url_list[count_while]))
+
+        # append the data
+        title_data_in_soup = nested_soup_string.find("div", attrs={"class": "head"}).text.strip()
+        status_data_in_soup = nested_soup_string.findAll(attrs={"class": "value"})
+        status_data.append(str(title_data_in_soup))
+        status_data.append(str(total_url_list[count_while]))
+
+        count_while += 1
+
+        # fill the list with the values from the soup
+        for span in status_data_in_soup:
+            data = span.text.strip()
+            status_data.append(str(data))
+
+        # appending and transposing the dataframe
+        df = pd.DataFrame(status_data)
+        df = pd.DataFrame.transpose(df)
+        localdf = localdf.append(df, ignore_index=True)
+        print("Added a row to the dataframe")
+    return localdf
+
+
+create_url_list()
+print("Created the URL list")
+totaldf = totaldf.append(find_information(), ignore_index=True)
+print("Found all the information")
+print(totaldf)
+totaldf.to_csv("crawltje.csv", encoding='utf-8', index=False)
+print("Created a CSV file on the local file location")
